@@ -5,13 +5,18 @@
       <h2>{{ currentPostDetail.authorId }}</h2>
       <p>{{ currentPostDetail.body }}</p>
       <p>{{ currentPostDetail.created_at }}</p>
-      <BaseButton
-        @click="
-          openModal();
-          selectFormMode('edit');
-        "
-        >Edit article</BaseButton
-      >
+      <div>
+        <BaseButton
+          @click="
+            openModal();
+            selectFormMode('edit');
+          "
+          >Edit article</BaseButton
+        >
+        <BaseButton @click="deletePost(currentPostDetail.id)"
+          >Delete Post</BaseButton
+        >
+      </div>
     </BaseCard>
     <BaseButton v-on:click="goBackToPosts">Go back</BaseButton>
   </div>
@@ -24,7 +29,7 @@ export default {
     ...mapGetters(["currentPostDetail"]),
   },
   methods: {
-    ...mapActions(["openModal", "selectFormMode"]),
+    ...mapActions(["openModal", "selectFormMode", "deletePost"]),
     goBackToPosts() {
       this.$router.push("/");
     },

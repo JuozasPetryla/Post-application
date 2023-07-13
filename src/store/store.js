@@ -15,9 +15,7 @@ const store = new Vuex.Store({
     },
     mutations: {
         setAuthors: (state, gotAuthors) => state.authors = gotAuthors,
-        setPosts: (state, gotPosts) => {
-            state.posts = gotPosts
-        },
+        setPosts: (state, gotPosts) => state.posts = gotPosts,
         setPostDetailId: (state, postId) => state.postDetailId = postId,
         setCurrentPostDetail: (state) => {
             const currentPost = state.posts.data.find(post => post.id === state.postDetailId)
@@ -25,7 +23,16 @@ const store = new Vuex.Store({
         },
         setModalOpen: (state) => state.createModalIsOpen = true,
         setModalClosed: (state) => state.createModalIsOpen = false,
-        setFormMode: (state,mode) => state.formMode = mode
+        setFormMode: (state, mode) => state.formMode = mode,
+        setNewPost: (state, postObj) => state.posts.data.push(postObj),
+        editPost: (state, postEditedObj) => {
+            const objectToEditIndex = state.posts.data.findIndex(post => post.id === postEditedObj.id)
+            state.posts[objectToEditIndex] = postEditedObj
+        },
+        deletePost: (state, postDeleteId) => {
+            state.posts.data.filter(post => post.id !== postDeleteId)
+            console.log(state.posts.data)
+        }
     },
     getters: {
         authors: (state) => state.authors,
@@ -56,8 +63,22 @@ const store = new Vuex.Store({
         closeModal({ commit }) {
             commit('setModalClosed')
         },
-        selectFormMode({commit},mode) {
+        selectFormMode({ commit }, mode) {
             commit('setFormMode', mode)
+        },
+        async createNewPost({ commit }, postObj) {
+            const response = await axios.post('http://localhost:3000/posts', postObj)
+            commit('setNewPost', response.data)
+            console.log(response)
+        },
+        async editPost({ commit }, postEditedObj) {
+            const response = await axios.patch("http://localhost:3000/posts", postEditedObj)
+            commit('editPost', response.data)
+        },
+        async deletePost({ commit }, postDeleteId) {
+            const response = await axios.delete(`http://localhost:3000/posts/${postDeleteId}`)
+            commit('deletePost', response.data)
+            console.log(response)
         }
     }
 

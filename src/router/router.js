@@ -8,7 +8,6 @@ Vue.use(VueRouter);
 
 const routes = [
     { path: '/', component: PostsPage },
-
     { path: '/postDetail/:id', component: PostDetailPage },
 ];
 

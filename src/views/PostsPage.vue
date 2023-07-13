@@ -6,6 +6,7 @@
       :key="post.id"
       :title="post.title"
       :date="post.created_at"
+      :id="post.id"
       @clickCard="getPostId(post.id)"
     />
   </section>

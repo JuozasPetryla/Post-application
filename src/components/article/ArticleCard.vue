@@ -3,32 +3,34 @@
     <h2>{{ author }}</h2>
     <h3>{{ title }}</h3>
     <p>{{ date }}</p>
+    <BaseButton @click="deletePost(id)">Delete post</BaseButton>
   </BaseCard>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
-  props: ['author','title','date'],
-  name: 'ArticleCard',
+  props: ["author", "title", "date", "id"],
+  name: "ArticleCard",
   methods: {
+    ...mapActions(["deletePost"]),
     triggerEvent() {
-      this.$emit('clickCard')
-    }
-  }
-  
+      this.$emit("clickCard");
+    },
+  },
 };
 </script>
 
 <style scoped>
 .article-card:hover,
 .article-card:active {
-    cursor: pointer;
-    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.3);
-    transform: translateY(-3%);
+  cursor: pointer;
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3%);
 }
 
 .article-card:active {
   transform: translateY(0%);
-  box-shadow: 1.5px 1.5px 1.5px 1.5px rgba(0,0,0,0.3);
+  box-shadow: 1.5px 1.5px 1.5px 1.5px rgba(0, 0, 0, 0.3);
 }
 </style>

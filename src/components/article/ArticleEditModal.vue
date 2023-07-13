@@ -1,15 +1,15 @@
 <template>
   <BaseDialog>
     <template v-slot:header>
-      <h2>Create new article</h2>
+      <h2>Edit article</h2>
     </template>
-    <template v-slot:button>Create article</template>
+    <template v-slot:button>Edit article</template>
   </BaseDialog>
 </template>
-
-<script>
+  
+  <script>
 export default {};
 </script>
-
-<style>
+  
+  <style>
 </style>

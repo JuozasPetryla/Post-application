@@ -1,5 +1,5 @@
 <template>
-  <button class="base-button" @click="triggerEvent">
+  <button class="base-button" @click.stop="triggerEvent">
     <slot></slot>
   </button>
 </template>

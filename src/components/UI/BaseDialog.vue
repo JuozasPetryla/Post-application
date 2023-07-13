@@ -5,19 +5,19 @@
         <slot name="header"></slot>
       </header>
       <BaseCard class="dialog-card">
-        <form @submit="triggerSubmit">
+        <form @submit.prevent="formSubmit">
           <div class="form-control">
             <label for="title">Title:</label>
             <input type="text" name="title" id="title" v-model="title" />
           </div>
           <div class="form-control" v-if="formMode === 'create'">
             <label for="author">Author:</label>
-            <select name="author" id="author">
+            <select name="author" id="author" v-model="author">
               <option value="">Select author</option>
               <option
                 v-for="author in authors.data"
                 :key="author.id"
-                :value="author.name"
+                :value="{ name: author.name, id: author.id }"
               >
                 {{ author.name }}
               </option>
@@ -53,16 +53,34 @@ export default {
     return {
       title: "",
       content: "",
+      author: {},
     };
   },
   methods: {
-    ...mapActions(["closeModal"]),
-    triggerSubmit() {
-      this.$emit("formSubmit");
+    ...mapActions(["closeModal", "createNewPost", "editPost"]),
+    formSubmit() {
+      if (this.formMode === "create") {
+        this.createNewPost({
+          title: this.title,
+          body: this.content,
+          authorId: this.author.id,
+          created_at: new Date().toISOString().slice(0, 10),
+          updated_at: new Date().toISOString().slice(0, 10),
+        });
+      }
+      if (this.formMode === "edit") {
+        this.editPost({
+          title: this.title,
+          body: this.content,
+          id: this.postDetailId,
+          authorId: this.author.id,
+          updated_at: new Date().toISOString(),
+        });
+      }
     },
   },
   computed: {
-    ...mapGetters(["authors", "formMode"]),
+    ...mapGetters(["authors", "formMode", "postDetailId"]),
   },
 };
 </script>
