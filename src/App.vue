@@ -1,16 +1,23 @@
 <template>
   <div id="app">
-    <TheHeader/>
+    <TheHeader />
+    <ArticleCreateModal v-if="createModalIsOpen"></ArticleCreateModal>
     <RouterView></RouterView>
   </div>
 </template>
 
 <script>
-import TheHeader from './components/layout/TheHeader.vue';
+import ArticleCreateModal from "./components/article/ArticleCreateModal.vue";
+import TheHeader from "./components/layout/TheHeader.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
-    TheHeader
-  }
+    TheHeader,
+    ArticleCreateModal,
+  },
+  computed: {
+    ...mapGetters(["createModalIsOpen"]),
+  },
 };
 </script>
 

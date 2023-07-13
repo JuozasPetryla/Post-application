@@ -1,5 +1,5 @@
 <template>
-  <BaseCard class="article-card" v-on:click="triggerEvent">
+  <BaseCard class="article-card" @click="triggerEvent">
     <h2>{{ author }}</h2>
     <h3>{{ title }}</h3>
     <p>{{ date }}</p>

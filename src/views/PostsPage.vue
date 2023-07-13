@@ -1,40 +1,46 @@
 <template>
-    <section class="articles-container">
-        <ArticleCard v-for="post in posts" :author="post.author" :key="post.id" :title="post.title" :date="post.created_at" v-on:clickCard="getPostId(post.id)" />
-    </section>
+  <section class="articles-container">
+    <ArticleCard
+      v-for="post in posts.data"
+      :author="post.authorId"
+      :key="post.id"
+      :title="post.title"
+      :date="post.created_at"
+      @clickCard="getPostId(post.id)"
+    />
+  </section>
 </template>
 
 <script>
-import ArticleCard from '../components/article/ArticleCard.vue';
-import { mapActions, mapGetters } from 'vuex';
+import ArticleCard from "../components/article/ArticleCard.vue";
+import { mapActions, mapGetters } from "vuex";
 export default {
-    components:{
-        ArticleCard
+  components: {
+    ArticleCard,
+  },
+  computed: {
+    ...mapGetters(["posts", "authors"]),
+  },
+  methods: {
+    ...mapActions(["getPosts", "getAuthors", "getPostDetailId", "updatePost"]),
+    getPostId(id) {
+      this.getPostDetailId(id);
+      this.updatePost();
+      this.$router.push(`/postDetail/${id}`);
     },
-    computed: {
-        ...mapGetters(['posts']),
-        
-    },
-    methods: {
-        ...mapActions(['getAuthorsAndPosts', 'getPostDetailId', 'updatePost']),
-        getPostId(id) {
-            this.getPostDetailId(id)
-            this.updatePost()
-            this.$router.push(`/postDetail/${id}`)
-        }
-    },
-    created() {
-        this.getAuthorsAndPosts()
-    }
-}
+  },
+  created() {
+    this.getPosts();
+    this.getAuthors();
+  },
+};
 </script>
 
 <style scoped>
 .articles-container {
-    display: flex;
-    margin-top: 1.2rem;
-    flex-direction: column;
-    gap: 1.2rem;
+  display: flex;
+  margin-top: 1.2rem;
+  flex-direction: column;
+  gap: 1.2rem;
 }
-
 </style>
