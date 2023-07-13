@@ -34,6 +34,10 @@ export default {
     this.getPosts();
     this.getAuthors();
   },
+  updated() {
+    this.getAuthors();
+    this.getPosts();
+  },
 };
 </script>
 

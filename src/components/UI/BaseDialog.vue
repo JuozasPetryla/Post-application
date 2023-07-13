@@ -45,7 +45,7 @@
     </dialog>
   </div>
 </template>
-  
+
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -77,6 +77,7 @@ export default {
           updated_at: new Date().toISOString(),
         });
       }
+      this.closeModal();
     },
   },
   computed: {
@@ -84,7 +85,7 @@ export default {
   },
 };
 </script>
-  
+
 <style scoped>
 header {
   color: white;
