@@ -1,8 +1,8 @@
-import Vuex from 'vuex'
-import Vue from 'vue'
-import axios from 'axios'
+import Vuex from "vuex";
+import Vue from "vue";
+import axios from "axios";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
@@ -24,7 +24,7 @@ const store = new Vuex.Store({
         setModalOpen: (state) => state.createModalIsOpen = true,
         setModalClosed: (state) => state.createModalIsOpen = false,
         setFormMode: (state, mode) => state.formMode = mode,
-        setNewPost: (state, postObj) => [postObj, ...state.posts.data],
+        setNewPost: (state, postObj) => state.posts.data.push(postObj),
         editPost: (state, postEditedObj) => {
             const objectToEditIndex = state.posts.data.findIndex(post => post.id === postEditedObj.id)
             state.posts[objectToEditIndex] = postEditedObj
@@ -81,9 +81,5 @@ const store = new Vuex.Store({
             console.log(response)
         }
     }
-
 })
-
-
-export default store
-
+export default store;

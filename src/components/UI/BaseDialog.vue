@@ -45,7 +45,7 @@
     </dialog>
   </div>
 </template>
-  
+
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -85,7 +85,7 @@ export default {
   },
 };
 </script>
-  
+
 <style scoped>
 header {
   color: white;
