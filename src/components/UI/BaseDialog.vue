@@ -5,12 +5,7 @@
         <slot name="header"></slot>
       </header>
 
-      <form
-        @submit.prevent="
-          validateForm();
-          formSubmit();
-        "
-      >
+      <form @submit.prevent="formSubmit">
         <div class="form-control">
           <label for="title">Title:</label>
           <input
@@ -28,7 +23,7 @@
           <select
             name="author"
             id="author"
-            v-model="author"
+            v-model="authorObj"
             :class="{ invalid: !authorIsValid }"
             @blur="validateAuthor"
           >
@@ -56,7 +51,7 @@
           <p v-if="!contentIsValid">Content must be atleast 10 characters</p>
         </div>
         <div class="form-buttons">
-          <BaseButton type="submit" :class="{ disabled: formIsValid }">
+          <BaseButton type="submit" :disabled="!formIsValid">
             <slot name="button"> Submit </slot>
           </BaseButton>
           <BaseButton @click="closeModal" class="close-btn"
@@ -75,23 +70,21 @@ export default {
     return {
       title: "",
       content: "",
-      author: {},
+      authorObj: {},
       titleIsValid: true,
       authorIsValid: true,
       contentIsValid: true,
-      formIsValid: true,
     };
   },
   methods: {
     ...mapActions(["closeModal", "createNewPost", "editPost"]),
-    formSubmit(event) {
-      console.log(event.target.id);
+    formSubmit() {
       if (!this.formIsValid) return;
       if (this.formMode === "create") {
         this.createNewPost({
           title: this.title,
           body: this.content,
-          authorId: this.author.id,
+          authorId: this.authorObj.id,
           created_at: new Date().toISOString().slice(0, 10),
           updated_at: new Date().toISOString().slice(0, 10),
         });
@@ -100,11 +93,11 @@ export default {
         this.editPost({
           title: this.title,
           body: this.content,
-          id: event.target.id,
-          authorId: this.author.id,
+          id: this.editId,
           updated_at: new Date().toISOString().slice(0, 10),
         });
       }
+      console.log(this.editId);
       this.closeModal();
     },
     validateForm() {
@@ -122,7 +115,7 @@ export default {
       }
     },
     validateAuthor() {
-      if (this.author) {
+      if (this.authorObj) {
         this.authorIsValid = true;
       } else {
         this.authorIsValid = false;
@@ -137,7 +130,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["authors", "formMode", "postDetailId"]),
+    ...mapGetters(["authors", "formMode", "postDetailId", "editId"]),
+    formIsValid() {
+      if (this.title && this.authorObj && this.content) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
 };
 </script>

@@ -8,10 +8,17 @@
         @click="
           openModal();
           selectFormMode('edit');
+          getEditId(id);
         "
         >Edit article</BaseButton
       >
-      <BaseButton @click="openInfoModal(); triggerDelete()">Delete post</BaseButton>
+      <BaseButton
+        @click="
+          openInfoModal();
+          triggerDelete();
+        "
+        >Delete post</BaseButton
+      >
     </div>
   </BaseCard>
 </template>
@@ -19,15 +26,17 @@
 <script>
 import { mapActions } from "vuex";
 export default {
-  props: ["author", "title", "date",'id'],
+  props: ["author", "title", "date", "id"],
   name: "ArticleCard",
+
   methods: {
     ...mapActions([
       "getAuthors",
       "getPosts",
       "openModal",
       "selectFormMode",
-      "openInfoModal"
+      "openInfoModal",
+      "getEditId",
     ]),
     triggerEvent() {
       this.$emit("clickCard");
@@ -35,6 +44,7 @@ export default {
     triggerDelete() {
       this.$emit("clickDelete");
     },
+
     updated() {
       this.getPosts();
       this.getAuthors();

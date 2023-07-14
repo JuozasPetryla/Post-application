@@ -11,20 +11,19 @@
         <BaseButton @click="closeInfoModal">Close</BaseButton>
       </template>
     </BaseInfoDialog>
+    <RouterView></RouterView>
   </div>
 </template>
 
 <script>
-import ArticleCreateModal from "./components/article/ArticleCreateModal.vue";
-import ArticleEditModal from "./components/article/ArticleEditModal.vue";
 import TheHeader from "./components/layout/TheHeader.vue";
 import { mapGetters, mapActions } from "vuex";
 export default {
-  
+  components: {
+    TheHeader,
+  },
   computed: {
     ...mapGetters([
-      "createModalIsOpen",
-      "formMode",
       "infoModalIsOpen",
       "infoModalText",
       "infoModalTitle",

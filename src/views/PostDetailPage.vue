@@ -1,5 +1,11 @@
 <template>
   <div class="detail-container">
+    <ArticleCreateModal
+      v-if="createModalIsOpen && formMode === 'create'"
+    ></ArticleCreateModal>
+    <ArticleEditModal
+      v-if="createModalIsOpen && formMode === 'edit'"
+    ></ArticleEditModal>
     <BaseCard>
       <h1>{{ currentPostDetail.data.title }}</h1>
       <h2>{{ currentPostDetail.data.authorId }}</h2>
@@ -21,10 +27,21 @@
 </template>
 
 <script>
+import ArticleCreateModal from "../components/article/ArticleCreateModal.vue";
+import ArticleEditModal from "../components/article/ArticleEditModal.vue";
 import { mapGetters, mapActions } from "vuex";
 export default {
+  components: {
+    ArticleCreateModal,
+    ArticleEditModal,
+  },
   computed: {
-    ...mapGetters(["currentPostDetail", "postDetailId"]),
+    ...mapGetters([
+      "currentPostDetail",
+      "postDetailId",
+      "formMode",
+      "createModalIsOpen",
+    ]),
   },
   methods: {
     ...mapActions([

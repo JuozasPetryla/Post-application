@@ -18,6 +18,7 @@ const store = new Vuex.Store({
         infoModalTitle: '',
         infoModalMode: '',
         pages: 1,
+        editId: 1,
     },
     mutations: {
         setAuthors: (state, gotAuthors) => state.authors = gotAuthors,
@@ -31,9 +32,9 @@ const store = new Vuex.Store({
         setFormMode: (state, mode) => state.formMode = mode,
         setNewPost: (state, postObj) => state.posts.data.unshift(postObj),
         editPost: (state, postEditedObj) => {
+            const postToEditId = state.editId
             const postsArray = state.posts.data
-            console.log(postsArray)
-            const objectToEdit = postsArray.find(post => post.title === postEditedObj.title)
+            const objectToEdit = postsArray.find(post => post.postToEditId === postEditedObj.id)
             const editedObject = { ...objectToEdit, ...postEditedObj }
             console.log(objectToEdit)
             console.log(editedObject)
@@ -44,8 +45,8 @@ const store = new Vuex.Store({
         setInfoModalText: (state, infoModalText) => state.infoModalText = infoModalText,
         setInfoModalTitle: (state, infoModalTitle) => state.infoModalTitle = infoModalTitle,
         setInfoModalMode: (state, infoModalMode) => state.infoModalMode = infoModalMode,
-        setPages: (state, pagesNum) => state.pages = pagesNum
-
+        setPages: (state, pagesNum) => state.pages = pagesNum,
+        setEditId: (state, editId) => state.editId = editId
     },
     getters: {
         authors: (state) => state.authors,
@@ -58,7 +59,8 @@ const store = new Vuex.Store({
         infoModalText: state => state.infoModalText,
         infoModalTitle: state => state.infoModalTitle,
         infoModalMode: state => state.infoModalMode,
-        pages: state => state.pages
+        pages: state => state.pages,
+        editId: state => state.editId
     },
     actions: {
         async getAuthors({ commit }) {
@@ -102,7 +104,8 @@ const store = new Vuex.Store({
         },
         async editPost({ commit }, postEditedObj) {
             try {
-                const response = await axios.post("http://localhost:3000/posts", postEditedObj)
+                console.log(postEditedObj)
+                const response = await axios("http://localhost:3000/posts", postEditedObj)
                 commit('editPost', response.data)
                 commit('setInfoModalText', 'Post edited succesfully!')
                 commit('setInfoModalTitle', 'Success')
@@ -148,6 +151,9 @@ const store = new Vuex.Store({
         },
         getPageCount({ commit }, pageNum) {
             commit('setPages', pageNum)
+        },
+        getEditId({ commit }, editId) {
+            commit('setEditId', editId)
         }
     }
 })
