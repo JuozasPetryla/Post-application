@@ -1,10 +1,10 @@
 <template>
   <div class="detail-container">
     <BaseCard>
-      <h1>{{ currentPostDetail.title }}</h1>
-      <h2>{{ currentPostDetail.authorId }}</h2>
-      <p>{{ currentPostDetail.body }}</p>
-      <p>{{ currentPostDetail.created_at }}</p>
+      <h1>{{ currentPostDetail.data.title }}</h1>
+      <h2>{{ currentPostDetail.data.authorId }}</h2>
+      <p>{{ currentPostDetail.data.body }}</p>
+      <p>{{ currentPostDetail.data.created_at }}</p>
       <div>
         <BaseButton
           @click="
@@ -13,9 +13,7 @@
           "
           >Edit article</BaseButton
         >
-        <BaseButton @click="deletePost(currentPostDetail.id)"
-          >Delete Post</BaseButton
-        >
+        <BaseButton @click="openInfoModal">Delete Post</BaseButton>
       </div>
     </BaseCard>
     <BaseButton v-on:click="goBackToPosts">Go back</BaseButton>
@@ -26,13 +24,23 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["currentPostDetail"]),
+    ...mapGetters(["currentPostDetail", "postDetailId"]),
   },
   methods: {
-    ...mapActions(["openModal", "selectFormMode", "deletePost"]),
+    ...mapActions([
+      "openModal",
+      "selectFormMode",
+      "openInfoModal",
+      "getCurrentPost",
+      "getAuthors",
+    ]),
     goBackToPosts() {
       this.$router.push("/");
     },
+  },
+  created() {
+    this.getCurrentPost(this.postDetailId);
+    this.getAuthors();
   },
 };
 </script>

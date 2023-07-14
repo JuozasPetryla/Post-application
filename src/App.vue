@@ -1,13 +1,16 @@
 <template>
   <div id="app">
     <TheHeader />
-    <ArticleCreateModal
-      v-if="createModalIsOpen && formMode === 'create'"
-    ></ArticleCreateModal>
-    <ArticleEditModal
-      v-if="createModalIsOpen && formMode === 'edit'"
-    ></ArticleEditModal>
-    <RouterView></RouterView>
+    <BaseInfoDialog v-if="infoModalIsOpen">
+      <template v-slot:title> {{ infoModalTitle }} </template>
+      <template v-slot:information> {{ infoModalText }}</template>
+      <template v-slot:actions>
+        <BaseButton v-if="infoModalMode === 'delete'" @click="closeInfoModal"
+          >Delete</BaseButton
+        >
+        <BaseButton @click="closeInfoModal">Close</BaseButton>
+      </template>
+    </BaseInfoDialog>
   </div>
 </template>
 
@@ -15,15 +18,21 @@
 import ArticleCreateModal from "./components/article/ArticleCreateModal.vue";
 import ArticleEditModal from "./components/article/ArticleEditModal.vue";
 import TheHeader from "./components/layout/TheHeader.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
-  components: {
-    TheHeader,
-    ArticleCreateModal,
-    ArticleEditModal,
-  },
+  
   computed: {
-    ...mapGetters(["createModalIsOpen", "formMode"]),
+    ...mapGetters([
+      "createModalIsOpen",
+      "formMode",
+      "infoModalIsOpen",
+      "infoModalText",
+      "infoModalTitle",
+      "infoModalMode",
+    ]),
+  },
+  methods: {
+    ...mapActions(["closeInfoModal"]),
   },
 };
 </script>

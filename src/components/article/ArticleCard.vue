@@ -3,19 +3,41 @@
     <h2>{{ author }}</h2>
     <h3>{{ title }}</h3>
     <p>{{ date }}</p>
-    <BaseButton @click="deletePost(id)">Delete post</BaseButton>
+    <div>
+      <BaseButton
+        @click="
+          openModal();
+          selectFormMode('edit');
+        "
+        >Edit article</BaseButton
+      >
+      <BaseButton @click="openInfoModal(); triggerDelete()">Delete post</BaseButton>
+    </div>
   </BaseCard>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 export default {
-  props: ["author", "title", "date", "id"],
+  props: ["author", "title", "date",'id'],
   name: "ArticleCard",
   methods: {
-    ...mapActions(["deletePost"]),
+    ...mapActions([
+      "getAuthors",
+      "getPosts",
+      "openModal",
+      "selectFormMode",
+      "openInfoModal"
+    ]),
     triggerEvent() {
       this.$emit("clickCard");
+    },
+    triggerDelete() {
+      this.$emit("clickDelete");
+    },
+    updated() {
+      this.getPosts();
+      this.getAuthors();
     },
   },
 };

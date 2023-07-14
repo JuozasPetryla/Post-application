@@ -1,5 +1,13 @@
 <template>
   <section class="articles-container">
+    <ArticleCreateModal
+      v-if="createModalIsOpen && formMode === 'create'"
+    ></ArticleCreateModal>
+    <ArticleEditModal
+      v-if="createModalIsOpen && formMode === 'edit'"
+    ></ArticleEditModal>
+    <RouterView></RouterView>
+    <ThePagination></ThePagination>
     <ArticleCard
       v-for="post in posts.data"
       :author="post.authorId"
@@ -8,35 +16,47 @@
       :date="post.created_at"
       :id="post.id"
       @clickCard="getPostId(post.id)"
+      @clickDelete="getDeleteId(post.id)"
     />
   </section>
 </template>
 
 <script>
+import ArticleCreateModal from "./components/article/ArticleCreateModal.vue";
+import ArticleEditModal from "./components/article/ArticleEditModal.vue";
 import ArticleCard from "../components/article/ArticleCard.vue";
 import { mapActions, mapGetters } from "vuex";
+import ThePagination from "../components/layout/ThePagination.vue";
 export default {
   components: {
     ArticleCard,
+    ThePagination,
+    ArticleCreateModal,
+    ArticleEditModal,
   },
   computed: {
-    ...mapGetters(["posts", "authors"]),
+    ...mapGetters(["posts", "authors", "infoModalIsOpen", "pages"]),
   },
   methods: {
-    ...mapActions(["getPosts", "getAuthors", "getPostDetailId", "updatePost"]),
+    ...mapActions([
+      "getPosts",
+      "getAuthors",
+      "getPostDetailId",
+      "closeInfoModal",
+      "getCurrentPost",
+    ]),
     getPostId(id) {
       this.getPostDetailId(id);
-      this.updatePost();
       this.$router.push(`/postDetail/${id}`);
+      this.getCurrentPost(this.postDetailId);
+    },
+    getDeleteId(id) {
+      this.$emit("clickDelete", id);
     },
   },
   created() {
     this.getPosts();
     this.getAuthors();
-  },
-  updated() {
-    this.getAuthors();
-    this.getPosts();
   },
 };
 </script>
