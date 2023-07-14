@@ -77,6 +77,7 @@ export default {
           updated_at: new Date().toISOString(),
         });
       }
+      this.closeModal();
     },
   },
   computed: {
