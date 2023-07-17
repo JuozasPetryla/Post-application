@@ -1,19 +1,26 @@
 <template>
-  <dialog open>
-    <header>
-      <slot name="title"></slot>
-    </header>
-    <p>
-      <slot name="information"></slot>
-    </p>
-    <div class="actions">
-      <slot name="actions"></slot>
-    </div>
-  </dialog>
+  <div class="overlay">
+    <dialog open>
+      <header>
+        <slot name="title"></slot>
+      </header>
+      <p>
+        <slot name="information"></slot>
+      </p>
+      <div class="actions">
+        <slot name="actions"></slot>
+      </div>
+    </dialog>
+  </div>
 </template>
 
 <script>
-export default {};
+import { mapActions } from "vuex";
+export default {
+  methods: {
+    ...mapActions(["closeModal"]),
+  },
+};
 </script>
 
 <style scoped>
@@ -27,6 +34,17 @@ dialog {
   padding: 0.6rem;
   width: 60%;
 }
+
+.overlay {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: #000000da;
+}
+
 header {
   background-color: #123d94;
   color: white;

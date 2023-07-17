@@ -17,8 +17,12 @@ const store = new Vuex.Store({
         infoModalText: '',
         infoModalTitle: '',
         infoModalMode: '',
+        postsLength: 0,
         pages: 1,
-        editId: 1,
+        currentPage: 1,
+        editId: 0,
+        deleteId: 0,
+        searchTerm: '',
     },
     mutations: {
         setAuthors: (state, gotAuthors) => state.authors = gotAuthors,
@@ -31,22 +35,15 @@ const store = new Vuex.Store({
         setInfoModalClosed: (state) => state.infoModalIsOpen = false,
         setFormMode: (state, mode) => state.formMode = mode,
         setNewPost: (state, postObj) => state.posts.data.unshift(postObj),
-        editPost: (state, postEditedObj) => {
-            const postToEditId = state.editId
-            const postsArray = state.posts.data
-            const objectToEdit = postsArray.find(post => post.postToEditId === postEditedObj.id)
-            const editedObject = { ...objectToEdit, ...postEditedObj }
-            console.log(objectToEdit)
-            console.log(editedObject)
-        },
-        deletePost: (state, postDeleteId) => {
-            state.posts.data.filter(post => post.id !== postDeleteId)
-        },
         setInfoModalText: (state, infoModalText) => state.infoModalText = infoModalText,
         setInfoModalTitle: (state, infoModalTitle) => state.infoModalTitle = infoModalTitle,
         setInfoModalMode: (state, infoModalMode) => state.infoModalMode = infoModalMode,
-        setPages: (state, pagesNum) => state.pages = pagesNum,
-        setEditId: (state, editId) => state.editId = editId
+        setPages: (state) => state.pages = Math.ceil(state.postsLength / 4),
+        setCurrentPage: (state, curPage) => state.currentPage = curPage,
+        setEditId: (state, editId) => state.editId = editId,
+        setDeleteId: (state, deleteId) => state.deleteId = deleteId,
+        setSearchTerm: (state, searchTerm) => state.searchTerm = searchTerm,
+        setPostsLength: (state, length) => state.postsLength = length
     },
     getters: {
         authors: (state) => state.authors,
@@ -60,7 +57,11 @@ const store = new Vuex.Store({
         infoModalTitle: state => state.infoModalTitle,
         infoModalMode: state => state.infoModalMode,
         pages: state => state.pages,
-        editId: state => state.editId
+        editId: state => state.editId,
+        deleteId: state => state.deleteId,
+        curPage: state => state.currentPage,
+        searchTerm: state => state.searchTerm,
+        postsLength: state => state.postsLength
     },
     actions: {
         async getAuthors({ commit }) {
@@ -72,10 +73,27 @@ const store = new Vuex.Store({
                 router.push({ name: 'error' })
             }
         },
-        async getPosts({ commit }) {
+        async getPosts({ commit, state }) {
             try {
-                const response = await axios.get('http://localhost:3000/posts?_page=1&_limit=20')
+                const response = await axios.get(`http://localhost:3000/posts?_page=${state.currentPage}&_limit=4`)
                 commit('setPosts', response)
+            } catch (err) {
+                router.push({ name: 'error' })
+            }
+        },
+        async getSearchedPosts({ commit, state }) {
+            try {
+                const response = await axios.get(`http://localhost:3000/posts?q=${state.searchTerm}`)
+                commit('setPosts', response)
+            } catch (err) {
+                router.push({ name: 'error' })
+            }
+        },
+        async getAllPosts({ commit }) {
+            try {
+                const response = await axios.get(`http://localhost:3000/posts`)
+                const postsArrayLength = response.data.length
+                commit('setPostsLength', postsArrayLength)
             } catch (err) {
                 router.push({ name: 'error' })
             }
@@ -83,7 +101,7 @@ const store = new Vuex.Store({
         async getCurrentPost({ commit }, postId) {
             try {
                 const response = await axios.get(`http://localhost:3000/posts/${postId ? postId : router.currentRoute.params.id}`)
-                commit('setCurrentPostDetail', response)
+                commit('setCurrentPostDetail', response.data)
             } catch (err) {
                 router.push({ name: 'error' })
             }
@@ -103,10 +121,12 @@ const store = new Vuex.Store({
             }
         },
         async editPost({ commit }, postEditedObj) {
+            const newObj = postEditedObj
+            const newObjId = postEditedObj.id
             try {
-                console.log(postEditedObj)
-                const response = await axios("http://localhost:3000/posts", postEditedObj)
-                commit('editPost', response.data)
+                const response = await axios.patch(`http://localhost:3000/posts/${newObjId}`, {
+                    ...newObj
+                })
                 commit('setInfoModalText', 'Post edited succesfully!')
                 commit('setInfoModalTitle', 'Success')
                 commit('setInfoModalOpen')
@@ -120,7 +140,6 @@ const store = new Vuex.Store({
         async deletePost({ commit }, postDeleteId) {
             try {
                 const response = await axios.delete(`http://localhost:3000/posts/${postDeleteId}`)
-                commit('deletePost', response.data)
             } catch (err) {
                 commit('setInfoModalText', err.message)
                 commit('setInfoModalTitle', 'An error has occured')
@@ -149,11 +168,20 @@ const store = new Vuex.Store({
         selectFormMode({ commit }, mode) {
             commit('setFormMode', mode)
         },
-        getPageCount({ commit }, pageNum) {
-            commit('setPages', pageNum)
-        },
         getEditId({ commit }, editId) {
             commit('setEditId', editId)
+        },
+        getDeleteId({ commit }, deleteId) {
+            commit('setDeleteId', deleteId)
+        },
+        getCurrentPage({ commit }, curPage) {
+            commit('setCurrentPage', curPage)
+        },
+        getSearchTerm({ commit }, searchTerm) {
+            commit('setSearchTerm', searchTerm)
+        },
+        getPages({ commit }) {
+            commit('setPages')
         }
     }
 })

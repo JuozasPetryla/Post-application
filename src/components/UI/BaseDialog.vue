@@ -1,11 +1,16 @@
 <template>
-  <div>
+  <div class="overlay">
     <dialog open>
       <header>
         <slot name="header"></slot>
       </header>
 
-      <form @submit.prevent="formSubmit">
+      <form
+        @submit.prevent="
+          formSubmit();
+          validateForm();
+        "
+      >
         <div class="form-control">
           <label for="title">Title:</label>
           <input
@@ -15,6 +20,7 @@
             v-model="title"
             :class="{ invalid: !titleIsValid }"
             @blur="validateTitle"
+            @input="validateTitle"
           />
           <p v-if="!titleIsValid">Please enter a title</p>
         </div>
@@ -47,11 +53,12 @@
             v-model="content"
             :class="{ invalid: !contentIsValid }"
             @blur="validateContent"
+            @input="validateContent"
           ></textarea>
           <p v-if="!contentIsValid">Content must be atleast 10 characters</p>
         </div>
         <div class="form-buttons">
-          <BaseButton type="submit" :disabled="!formIsValid">
+          <BaseButton type="submit">
             <slot name="button"> Submit </slot>
           </BaseButton>
           <BaseButton @click="closeModal" class="close-btn"
@@ -74,6 +81,7 @@ export default {
       titleIsValid: true,
       authorIsValid: true,
       contentIsValid: true,
+      formIsValid: false,
     };
   },
   methods: {
@@ -97,10 +105,15 @@ export default {
           updated_at: new Date().toISOString().slice(0, 10),
         });
       }
-      console.log(this.editId);
       this.closeModal();
+      if (this.$router.currentRoute.path !== "/") {
+        this.$router.push("/");
+      }
     },
     validateForm() {
+      this.validateTitle();
+      this.validateAuthor();
+      this.validateContent();
       if (this.titleIsValid && this.authorIsValid && this.contentIsValid) {
         this.formIsValid = true;
       } else {
@@ -131,13 +144,6 @@ export default {
   },
   computed: {
     ...mapGetters(["authors", "formMode", "postDetailId", "editId"]),
-    formIsValid() {
-      if (this.title && this.authorObj && this.content) {
-        return true;
-      } else {
-        return false;
-      }
-    },
   },
 };
 </script>
@@ -150,6 +156,16 @@ header {
   padding: 0.2rem 0;
   width: 100%;
   background: #123d94;
+}
+
+.overlay {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: #000000da;
 }
 
 dialog {

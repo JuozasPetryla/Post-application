@@ -7,19 +7,32 @@
       v-if="createModalIsOpen && formMode === 'edit'"
     ></ArticleEditModal>
     <BaseCard>
-      <h1>{{ currentPostDetail.data.title }}</h1>
-      <h2>{{ currentPostDetail.data.authorId }}</h2>
-      <p>{{ currentPostDetail.data.body }}</p>
-      <p>{{ currentPostDetail.data.created_at }}</p>
+      <h1>{{ currentPostDetail.title }}</h1>
+      <h2>{{ currentPostDetail.id }}</h2>
+      <p>{{ currentPostDetail.body }}</p>
+      <p>
+        {{
+          currentPostDetail.updated_at !== currentPostDetail.created_at
+            ? currentPostDetail.updated_at
+            : currentPostDetail.created_at
+        }}
+      </p>
       <div>
         <BaseButton
           @click="
             openModal();
             selectFormMode('edit');
+            getEditId(currentPostDetail.id);
           "
           >Edit article</BaseButton
         >
-        <BaseButton @click="openInfoModal">Delete Post</BaseButton>
+        <BaseButton
+          @click="
+            openInfoModal();
+            getDeleteId(currentPostDetail.id);
+          "
+          >Delete Post</BaseButton
+        >
       </div>
     </BaseCard>
     <BaseButton v-on:click="goBackToPosts">Go back</BaseButton>
@@ -41,7 +54,16 @@ export default {
       "postDetailId",
       "formMode",
       "createModalIsOpen",
+      "deleteId",
+      "authors",
     ]),
+    authorName() {
+      if (!this.authors.data) return;
+      const authorN = this.authors.data.find(
+        (author) => author.id === this.currentPostDetail.authorId
+      ).name;
+      return authorN;
+    },
   },
   methods: {
     ...mapActions([
@@ -50,9 +72,19 @@ export default {
       "openInfoModal",
       "getCurrentPost",
       "getAuthors",
+      "getDeleteId",
+      "getEditId",
     ]),
     goBackToPosts() {
       this.$router.push("/");
+    },
+  },
+  watch: {
+    "$store.state.posts": {
+      deep: true,
+      handler() {
+        this.getCurrentPost(this.postDetailId);
+      },
     },
   },
   created() {

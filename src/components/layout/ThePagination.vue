@@ -1,6 +1,16 @@
 <template>
   <div class="pagination">
-    <button disabled class="active">{{ pages }}</button>
+    <button
+      :class="{
+        active: curPage ? num === curPage : num === 1,
+        disabled: curPage ? num === curPage : num === 1,
+      }"
+      @click="getCurrentPage(num)"
+      v-for="num in pages"
+      :key="num"
+    >
+      {{ num }}
+    </button>
   </div>
 </template>
 
@@ -8,14 +18,14 @@
 import { mapActions, mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["posts", "pages"]),
+    ...mapGetters(["pages", "curPage", "posts"]),
   },
   methods: {
-    ...mapActions(["getPosts", "getPageCount"]),
+    ...mapActions(["getCurrentPage", "getAllPosts", "getPages"]),
   },
   created() {
-    this.getPosts();
-    this.getPageCount();
+    this.getAllPosts();
+    this.getCurrentPage();
   },
 };
 </script>

@@ -15,7 +15,7 @@
       <BaseButton
         @click="
           openInfoModal();
-          triggerDelete();
+          getDeleteId(id);
         "
         >Delete post</BaseButton
       >
@@ -37,14 +37,11 @@ export default {
       "selectFormMode",
       "openInfoModal",
       "getEditId",
+      "getDeleteId",
     ]),
     triggerEvent() {
       this.$emit("clickCard");
     },
-    triggerDelete() {
-      this.$emit("clickDelete");
-    },
-
     updated() {
       this.getPosts();
       this.getAuthors();
