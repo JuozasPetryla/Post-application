@@ -5,8 +5,8 @@
       <TheSearchBar></TheSearchBar>
       <ThePagination v-if="postsLength !== 0"></ThePagination>
       <ArticleCard
-        v-for="post in posts"
-        :author="authors.find((author) => author.id === post.authorId).name"
+        v-for="post in searchTerm ? searchedPosts : posts"
+        :author="authors.find((author) => author.id === post.authorId)?.name"
         :key="post.id"
         :title="post.title"
         :date="
@@ -37,11 +37,7 @@ export default {
     ArticleEditModal,
     TheSearchBar,
   },
-  data() {
-    return {
-      postLength: 0,
-    };
-  },
+
   computed: {
     ...mapGetters([
       "posts",
@@ -52,6 +48,7 @@ export default {
       "createModalIsOpen",
       "postsLength",
       "searchTerm",
+      "searchedPosts",
     ]),
     dialog() {
       if (this.formMode === "create") {
@@ -66,13 +63,18 @@ export default {
     "$store.state.pagination.currentPage": {
       deep: true,
       handler() {
-        this.getPosts();
+        if (!this.searchTerm) {
+          this.getPosts();
+        } else {
+          this.getSearchedPosts();
+        }
       },
     },
     "$store.state.search.searchTerm": {
       deep: true,
       handler() {
         this.getSearchedPosts();
+        this.getPages();
       },
     },
     "$store.state.pagination.postsLength": {
@@ -103,6 +105,11 @@ export default {
     this.getPosts();
     this.getAuthors();
     this.getAllPosts();
+  },
+  updated() {
+    if (!this.searchTerm) {
+      this.getAllPosts();
+    }
   },
 };
 </script>

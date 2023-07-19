@@ -25,7 +25,6 @@ export default {
       "getSearchedPosts",
       "getCurrentPage",
       "getPages",
-      "getPosts",
       "getAllPosts",
     ]),
   },

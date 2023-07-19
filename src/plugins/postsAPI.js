@@ -37,9 +37,10 @@ const postsAPI = store => {
         const postsArrayLength = response.data.length
         return postsArrayLength
     }
-    store.getSearchedPosts = async function (searchTerm) {
-        const response = await this.http.get(`/posts?q=${searchTerm}`)
-        return response.data
+    store.getSearchedPosts = async function (searchTerm, page) {
+        const responseLength = await this.http.get(`/posts?q=${searchTerm}&`)
+        const responseData = await this.http.get(`/posts?q=${searchTerm}&_page=${page}&_limit=${POSTS_PER_PAGE}`)
+        return [responseLength.data.length, responseData.data]
     }
 }
 

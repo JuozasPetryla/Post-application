@@ -6,7 +6,7 @@
       <h2>
         {{
           authors.find((author) => author.id === currentPostDetail.authorId)
-            .name
+            ?.name
         }}
       </h2>
       <p>{{ currentPostDetail.body }}</p>
