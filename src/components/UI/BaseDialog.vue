@@ -26,6 +26,7 @@
             id="author"
             v-model="authorObj"
             :class="{ invalid: !authorIsValid }"
+            @focusout="validateAuthor"
           >
             <option
               v-for="author in authors"
