@@ -6,5 +6,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+  },
+  define: {
+    SERVER_ADDR: JSON.stringify('http://localhost:3000'),
+    POSTS_PER_PAGE: 4,
   }
 })

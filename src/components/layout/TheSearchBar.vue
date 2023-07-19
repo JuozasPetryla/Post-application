@@ -1,6 +1,6 @@
 <template>
   <input
-    @input="getSearchTerm(searchTerms)"
+    v-debounce:1s="search"
     type="text"
     placeholder="search"
     v-model="searchTerms"
@@ -8,19 +8,21 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
       searchTerms: "",
     };
   },
-
-  computed: {
-    ...mapGetters(["searchTerm"]),
-  },
   methods: {
-    ...mapActions(["getSearchTerm"]),
+    ...mapActions(["getSearchTerm", "getPages", "getCurrentPage"]),
+    search() {
+      this.getSearchTerm(this.searchTerms);
+    },
+  },
+  updated() {
+    setTimeout(() => this.getCurrentPage(), 1000);
   },
 };
 </script>

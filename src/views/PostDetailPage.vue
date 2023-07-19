@@ -1,14 +1,14 @@
 <template>
   <div class="detail-container">
-    <ArticleCreateModal
-      v-if="createModalIsOpen && formMode === 'create'"
-    ></ArticleCreateModal>
-    <ArticleEditModal
-      v-if="createModalIsOpen && formMode === 'edit'"
-    ></ArticleEditModal>
+    <component v-if="createModalIsOpen" :is="dialog"></component>
     <BaseCard>
       <h1>{{ currentPostDetail.title }}</h1>
-      <h2>{{ currentPostDetail.id }}</h2>
+      <h2>
+        {{
+          authors.find((author) => author.id === currentPostDetail.authorId)
+            .name
+        }}
+      </h2>
       <p>{{ currentPostDetail.body }}</p>
       <p>
         {{
@@ -57,12 +57,14 @@ export default {
       "deleteId",
       "authors",
     ]),
-    authorName() {
-      if (!this.authors.data) return;
-      const authorN = this.authors.data.find(
-        (author) => author.id === this.currentPostDetail.authorId
-      ).name;
-      return authorN;
+
+    dialog() {
+      if (this.formMode === "create") {
+        return ArticleCreateModal;
+      }
+      if (this.formMode === "edit") {
+        return ArticleEditModal;
+      }
     },
   },
   methods: {
@@ -80,7 +82,7 @@ export default {
     },
   },
   watch: {
-    "$store.state.posts": {
+    "$store.state.posts.posts": {
       deep: true,
       handler() {
         this.getCurrentPost(this.postDetailId);

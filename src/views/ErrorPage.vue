@@ -1,11 +1,20 @@
 <template>
   <BaseCard class="card">
-    <h2>Error 404 page does not exist</h2>
+    <h2 v-if="errorMessage">{{ errorMessage }}</h2>
+    <h2 v-else>Page does not exist</h2>
   </BaseCard>
 </template>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+export default {
+  computed: {
+    ...mapGetters(["errorMessage"]),
+  },
+  created() {
+    console.log(this.errorMessage);
+  },
+};
 </script>
 
 <style scoped>

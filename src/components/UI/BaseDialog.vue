@@ -5,12 +5,7 @@
         <slot name="header"></slot>
       </header>
 
-      <form
-        @submit.prevent="
-          formSubmit();
-          validateForm();
-        "
-      >
+      <form @submit.prevent="formSubmit">
         <div class="form-control">
           <label for="title">Title:</label>
           <input
@@ -31,11 +26,9 @@
             id="author"
             v-model="authorObj"
             :class="{ invalid: !authorIsValid }"
-            @blur="validateAuthor"
           >
-            <option value="">Select author</option>
             <option
-              v-for="author in authors.data"
+              v-for="author in authors"
               :key="author.id"
               :value="{ name: author.name, id: author.id }"
             >
@@ -53,12 +46,16 @@
             v-model="content"
             :class="{ invalid: !contentIsValid }"
             @blur="validateContent"
-            @input="validateContent"
           ></textarea>
           <p v-if="!contentIsValid">Content must be atleast 10 characters</p>
         </div>
         <div class="form-buttons">
-          <BaseButton type="submit">
+          <BaseButton
+            type="submit"
+            @click="
+              formMode === 'create' ? validateCreateForm() : validateEditForm()
+            "
+          >
             <slot name="button"> Submit </slot>
           </BaseButton>
           <BaseButton @click="closeModal" class="close-btn"
@@ -110,11 +107,20 @@ export default {
         this.$router.push("/");
       }
     },
-    validateForm() {
+    validateCreateForm() {
       this.validateTitle();
       this.validateAuthor();
       this.validateContent();
       if (this.titleIsValid && this.authorIsValid && this.contentIsValid) {
+        this.formIsValid = true;
+      } else {
+        this.formIsValid = false;
+      }
+    },
+    validateEditForm() {
+      this.validateTitle();
+      this.validateContent();
+      if (this.titleIsValid && this.contentIsValid) {
         this.formIsValid = true;
       } else {
         this.formIsValid = false;
@@ -128,7 +134,7 @@ export default {
       }
     },
     validateAuthor() {
-      if (this.authorObj) {
+      if (this.authorObj.name) {
         this.authorIsValid = true;
       } else {
         this.authorIsValid = false;

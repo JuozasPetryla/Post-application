@@ -1,17 +1,12 @@
 <template>
   <div>
-    <ArticleCreateModal
-      v-if="createModalIsOpen && formMode === 'create'"
-    ></ArticleCreateModal>
-    <ArticleEditModal
-      v-if="createModalIsOpen && formMode === 'edit'"
-    ></ArticleEditModal>
+    <component v-if="createModalIsOpen" :is="dialog"></component>
     <section class="articles-container">
       <TheSearchBar></TheSearchBar>
-      <ThePagination></ThePagination>
+      <ThePagination v-if="postsLength !== 0"></ThePagination>
       <ArticleCard
-        v-for="post in posts.data"
-        :author="authorName(post.authorId)"
+        v-for="post in posts"
+        :author="authors.find((author) => author.id === post.authorId).name"
         :key="post.id"
         :title="post.title"
         :date="
@@ -42,6 +37,11 @@ export default {
     ArticleEditModal,
     TheSearchBar,
   },
+  data() {
+    return {
+      postLength: 0,
+    };
+  },
   computed: {
     ...mapGetters([
       "posts",
@@ -51,19 +51,34 @@ export default {
       "formMode",
       "createModalIsOpen",
       "postsLength",
+      "searchTerm",
     ]),
+    dialog() {
+      if (this.formMode === "create") {
+        return ArticleCreateModal;
+      }
+      if (this.formMode === "edit") {
+        return ArticleEditModal;
+      }
+    },
   },
   watch: {
-    "$store.state.currentPage": {
+    "$store.state.pagination.currentPage": {
       deep: true,
       handler() {
         this.getPosts();
       },
     },
-    "$store.state.searchTerm": {
+    "$store.state.search.searchTerm": {
       deep: true,
       handler() {
         this.getSearchedPosts();
+      },
+    },
+    "$store.state.pagination.postsLength": {
+      deep: true,
+      handler() {
+        this.getPages();
       },
     },
   },
@@ -83,20 +98,11 @@ export default {
       this.getCurrentPost(id);
       this.$router.push(`/postDetail/${id}`);
     },
-    authorName(id) {
-      if (!this.authors.data) return;
-      const authorN = this.authors.data.find((author) => id === author.id).name;
-      return authorN;
-    },
   },
   created() {
     this.getPosts();
     this.getAuthors();
     this.getAllPosts();
-  },
-  updated() {
-    this.getAllPosts();
-    this.getPages();
   },
 };
 </script>

@@ -18,14 +18,22 @@
 import { mapActions, mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["pages", "curPage", "posts"]),
+    ...mapGetters(["pages", "curPage", "searchTerm"]),
   },
   methods: {
-    ...mapActions(["getCurrentPage", "getAllPosts", "getPages"]),
+    ...mapActions([
+      "getSearchedPosts",
+      "getCurrentPage",
+      "getPages",
+      "getPosts",
+      "getAllPosts",
+    ]),
   },
   created() {
-    this.getAllPosts();
     this.getCurrentPage();
+  },
+  updated() {
+    this.getPages();
   },
 };
 </script>
