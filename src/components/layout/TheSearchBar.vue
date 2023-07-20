@@ -16,13 +16,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["getSearchTerm", "getPages", "getCurrentPage"]),
+    ...mapActions(["getSearchTerm", "getCurrentPage"]),
     search() {
       this.getSearchTerm(this.searchTerms);
     },
   },
   updated() {
-    setTimeout(() => this.getCurrentPage(), 1000);
+    this.getCurrentPage();
   },
 };
 </script>

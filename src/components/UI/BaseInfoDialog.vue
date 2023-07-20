@@ -15,12 +15,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-export default {
-  methods: {
-    ...mapActions(["closeModal"]),
-  },
-};
+export default {};
 </script>
 
 <style scoped>

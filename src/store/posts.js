@@ -50,20 +50,7 @@ const actions = {
             router.push({ name: 'error' })
         }
     },
-    async createNewPost({ commit }, postObj) {
-        try {
-            const newPost = await this.createNewPost(postObj)
-            commit('setNewPost', newPost)
-            commit('setInfoModalText', 'Post created succesfully!')
-            commit('setInfoModalTitle', 'Success')
-            commit('setInfoModalOpen')
-        } catch (err) {
-            commit('setInfoModalText', err.message)
-            commit('setInfoModalTitle', 'An error has occured')
-            commit('setInfoModalMode', 'error')
-            commit('setInfoModalOpen')
-        }
-    },
+
     getPostDetailId({ commit }, postId) {
         commit('setPostDetailId', postId)
     },

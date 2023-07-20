@@ -5,6 +5,7 @@
     <p>{{ date }}</p>
     <div>
       <BaseButton
+        class="editButton"
         @click="
           openModal();
           selectFormMode('edit');
@@ -13,6 +14,7 @@
         >Edit article</BaseButton
       >
       <BaseButton
+        class="deleteButton"
         @click="
           openInfoModal();
           getDeleteId(id);

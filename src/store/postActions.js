@@ -36,6 +36,20 @@ const actions = {
             commit('setInfoModalOpen')
         }
     },
+    async createNewPost({ commit }, postObj) {
+        try {
+            const newPost = await this.createNewPost(postObj)
+            commit('setNewPost', newPost, {root:true})
+            commit('setInfoModalText', 'Post created succesfully!')
+            commit('setInfoModalTitle', 'Success')
+            commit('setInfoModalOpen')
+        } catch (err) {
+            commit('setInfoModalText', err.message)
+            commit('setInfoModalTitle', 'An error has occured')
+            commit('setInfoModalMode', 'error')
+            commit('setInfoModalOpen')
+        }
+    },
     getEditId({ commit }, editId) {
         commit('setEditId', editId)
     },
