@@ -161,7 +161,6 @@ describe('BaseDialog.vue', () => {
                 formMode: 'edit'
             }
         });
-
         const titleInput = wrapper.find('#title');
         const contentTextarea = wrapper.find('#content');
         await titleInput.setValue('Title');
@@ -169,7 +168,7 @@ describe('BaseDialog.vue', () => {
         const form = wrapper.find('form');
         await form.trigger('submit.prevent');
 
-        await wrapper.vm.$nextTick();
+        wrapper.vm.formSubmit()
 
         expect(actions.editPost).toHaveBeenCalledWith({
             title: 'Title',
