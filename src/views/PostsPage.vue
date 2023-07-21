@@ -1,6 +1,6 @@
 <template>
   <div>
-    <component v-if="createModalIsOpen" :is="dialog"></component>
+    <component v-if="createModalIsOpen" :is="dialog" class="modal-dynamic-component"></component>
     <section class="articles-container">
       <TheSearchBar></TheSearchBar>
       <ThePagination v-if="postsLength !== 0"></ThePagination>
@@ -16,6 +16,7 @@
         "
         :id="post.id"
         @clickCard="getPostId(post.id)"
+        class="article-card"
       />
       <h2 v-if="postsLength === 0">There are no posts here</h2>
     </section>
@@ -42,8 +43,6 @@ export default {
     ...mapGetters([
       "posts",
       "authors",
-      "infoModalIsOpen",
-      "pages",
       "formMode",
       "createModalIsOpen",
       "postsLength",
@@ -104,7 +103,6 @@ export default {
   created() {
     this.getPosts();
     this.getAuthors();
-    this.getAllPosts();
   },
   updated() {
     if (!this.searchTerm) {

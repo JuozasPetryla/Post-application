@@ -30,11 +30,8 @@ import { mapActions } from "vuex";
 export default {
   props: ["author", "title", "date", "id"],
   name: "ArticleCard",
-
   methods: {
     ...mapActions([
-      "getAuthors",
-      "getPosts",
       "openModal",
       "selectFormMode",
       "openInfoModal",
@@ -43,10 +40,6 @@ export default {
     ]),
     triggerEvent() {
       this.$emit("clickCard");
-    },
-    updated() {
-      this.getPosts();
-      this.getAuthors();
     },
   },
 };

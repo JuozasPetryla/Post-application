@@ -63,15 +63,15 @@ describe('ArticleCard.vue', () => {
 
     test('Article cards edit button should open modal window, set mode to edit and get the edit id', async () => {
         const newWrapper = shallowMount(ArticleCard, { store, localVue })
-        newWrapper.find('.editButton').trigger('click')
+        newWrapper.findComponent('.editButton').trigger('click')
         expect(actions.openModal).toHaveBeenCalled()
         expect(actions.selectFormMode).toHaveBeenCalled()
         expect(actions.getEditId).toHaveBeenCalled()
     })
 
-    test('Article cards delete button should open modal window, set mode to edit and get the edit id', async () => {
+    test('Article cards delete button should open info modal window and get the delete id', async () => {
         const newWrapper = shallowMount(ArticleCard, { store, localVue })
-        newWrapper.find('.deleteButton').trigger('click')
+        newWrapper.findComponent('.deleteButton').trigger('click')
         expect(actions.openInfoModal).toHaveBeenCalled()
         expect(actions.getDeleteId).toHaveBeenCalled()
     })

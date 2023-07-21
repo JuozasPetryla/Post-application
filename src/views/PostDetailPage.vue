@@ -1,6 +1,10 @@
 <template>
   <div class="detail-container">
-    <component v-if="createModalIsOpen" :is="dialog"></component>
+    <component
+      class=".modal-dynamic-component"
+      v-if="createModalIsOpen"
+      :is="dialog"
+    ></component>
     <BaseCard>
       <h1>{{ currentPostDetail.title }}</h1>
       <h2>
@@ -9,8 +13,8 @@
             ?.name
         }}
       </h2>
-      <p>{{ currentPostDetail.body }}</p>
-      <p>
+      <p class="post-body">{{ currentPostDetail.body }}</p>
+      <p class="post-date">
         {{
           currentPostDetail.updated_at !== currentPostDetail.created_at
             ? currentPostDetail.updated_at
@@ -19,6 +23,7 @@
       </p>
       <div>
         <BaseButton
+          class="edit-btn"
           @click="
             openModal();
             selectFormMode('edit');
@@ -27,6 +32,7 @@
           >Edit article</BaseButton
         >
         <BaseButton
+          class="delete-btn"
           @click="
             openInfoModal();
             getDeleteId(currentPostDetail.id);
@@ -35,7 +41,7 @@
         >
       </div>
     </BaseCard>
-    <BaseButton v-on:click="goBackToPosts">Go back</BaseButton>
+    <BaseButton class="back-btn" v-on:click="goBackToPosts">Go back</BaseButton>
   </div>
 </template>
 
@@ -79,14 +85,6 @@ export default {
     ]),
     goBackToPosts() {
       this.$router.push("/");
-    },
-  },
-  watch: {
-    "$store.state.posts.posts": {
-      deep: true,
-      handler() {
-        this.getCurrentPost(this.postDetailId);
-      },
     },
   },
   created() {

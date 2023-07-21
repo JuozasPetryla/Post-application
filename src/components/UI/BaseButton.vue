@@ -6,6 +6,7 @@
 
 <script>
 export default {
+  name: "BaseButton",
   methods: {
     triggerEvent() {
       this.$emit("click");

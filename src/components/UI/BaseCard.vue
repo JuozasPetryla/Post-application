@@ -6,6 +6,8 @@
 
 <script>
 export default {
+  name: 'BaseCard',
+
   methods: {
     triggerEvent() {
       this.$emit("click");

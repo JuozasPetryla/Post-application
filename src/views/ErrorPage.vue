@@ -11,9 +11,6 @@ export default {
   computed: {
     ...mapGetters(["errorMessage"]),
   },
-  created() {
-    console.log(this.errorMessage);
-  },
 };
 </script>
 

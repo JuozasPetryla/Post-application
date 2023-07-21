@@ -17,19 +17,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
+  name: 'ThePagination',
   computed: {
     ...mapGetters(["pages", "curPage"]),
   },
   methods: {
-    ...mapActions(["getCurrentPage", "getPages", "getAllPosts"]),
-  },
-  created() {
-    this.getPages();
-    this.getCurrentPage();
-    this.getAllPosts();
-  },
-  updated() {
-    this.getPages();
+    ...mapActions(["getCurrentPage"]),
   },
 };
 </script>

@@ -29,6 +29,7 @@
             @focusout="validateAuthor"
           >
             <option
+            class="select-options"
               v-for="author in authors"
               :key="author.id"
               :value="{ name: author.name, id: author.id }"
@@ -52,6 +53,7 @@
         </div>
         <div class="form-buttons">
           <BaseButton
+            class="submit-button"
             type="submit"
             @click="
               formMode === 'create' ? validateCreateForm() : validateEditForm()
@@ -71,6 +73,8 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
+  name: 'BaseDialog',
+
   data() {
     return {
       title: "",
@@ -81,6 +85,9 @@ export default {
       contentIsValid: true,
       formIsValid: false,
     };
+  },
+  computed: {
+    ...mapGetters(["authors", "formMode", "editId"]),
   },
   methods: {
     ...mapActions(["closeModal", "createNewPost", "editPost"]),
@@ -148,9 +155,6 @@ export default {
         this.contentIsValid = false;
       }
     },
-  },
-  computed: {
-    ...mapGetters(["authors", "formMode", "postDetailId", "editId"]),
   },
 };
 </script>

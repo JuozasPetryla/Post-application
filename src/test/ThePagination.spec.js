@@ -1,9 +1,7 @@
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import Vuex from 'vuex'
-import pagination from "../store/pagination";
 import { describe, test, expect, vi } from 'vitest'
 import ThePagination from '../components/layout/ThePagination.vue'
-import pagination from "../store/pagination";
 
 const localVue = createLocalVue()
 
@@ -12,25 +10,42 @@ localVue.use(Vuex)
 describe('ThePagination.vue', () => {
     let actions
     let store
+    let getters
+
 
     beforeEach(() => {
+
         actions = {
             getCurrentPage: vi.fn(),
-            getPages: vi.fn(),
+        }
+
+        getters = {
+            pages: () => 3,
+            curPage: () => 2,
         }
 
         store = new Vuex.Store({
             modules: {
                 pagination: {
                     actions,
-                    getters: pagination.getters
+                    getters
                 },
             }
         })
     })
 
-    test('Should render pages based on the pages number', async () => {
+    test('Should render amount of pages based on the pages number', () => {
         const wrapper = shallowMount(ThePagination, { store, localVue })
-
-
+        const buttonLength = wrapper.findAll('button').length
+        const pages = getters.pages()
+        expect(buttonLength).toBe(pages)
     })
+    test('Page button should get the current page and set clicked button to active and disabled classes', () => {
+        const wrapper = shallowMount(ThePagination, { store, localVue })
+        const buttons = wrapper.findAll('button')
+        buttons.at(1).trigger('click')
+        expect(actions.getCurrentPage).toHaveBeenCalled()
+        expect(buttons.at(getters.curPage() - 1).classes()).toContain('active')
+        expect(buttons.at(getters.curPage() - 1).classes()).toContain('disabled')
+    })
+})
