@@ -1,6 +1,10 @@
 <template>
   <div>
-    <component v-if="createModalIsOpen" :is="dialog" class="modal-dynamic-component"></component>
+    <component
+      v-if="createModalIsOpen"
+      :is="dialog"
+      class="modal-dynamic-component"
+    ></component>
     <section class="articles-container">
       <TheSearchBar></TheSearchBar>
       <ThePagination v-if="postsLength !== 0"></ThePagination>

@@ -1,51 +1,49 @@
 import { createLocalVue, shallowMount } from "@vue/test-utils";
-import Vuex from 'vuex'
-import { describe, test, expect, vi } from 'vitest'
-import ThePagination from '../components/layout/ThePagination.vue'
+import Vuex from "vuex";
+import { describe, test, expect, vi } from "vitest";
+import ThePagination from "../components/layout/ThePagination.vue";
 
-const localVue = createLocalVue()
+const localVue = createLocalVue();
 
-localVue.use(Vuex)
+localVue.use(Vuex);
 
-describe('ThePagination.vue', () => {
-    let actions
-    let store
-    let getters
+describe("ThePagination.vue", () => {
+  let actions;
+  let store;
+  let getters;
+  let wrapper;
 
+  beforeEach(() => {
+    actions = {
+      getCurrentPage: vi.fn(),
+    };
 
-    beforeEach(() => {
+    getters = {
+      pages: () => 3,
+      curPage: () => 2,
+    };
 
-        actions = {
-            getCurrentPage: vi.fn(),
-        }
+    store = new Vuex.Store({
+      modules: {
+        pagination: {
+          actions,
+          getters,
+        },
+      },
+    });
+    wrapper = shallowMount(ThePagination, { store, localVue });
+  });
 
-        getters = {
-            pages: () => 3,
-            curPage: () => 2,
-        }
-
-        store = new Vuex.Store({
-            modules: {
-                pagination: {
-                    actions,
-                    getters
-                },
-            }
-        })
-    })
-
-    test('Should render amount of pages based on the pages number', () => {
-        const wrapper = shallowMount(ThePagination, { store, localVue })
-        const buttonLength = wrapper.findAll('button').length
-        const pages = getters.pages()
-        expect(buttonLength).toBe(pages)
-    })
-    test('Page button should get the current page and set clicked button to active and disabled classes', () => {
-        const wrapper = shallowMount(ThePagination, { store, localVue })
-        const buttons = wrapper.findAll('button')
-        buttons.at(1).trigger('click')
-        expect(actions.getCurrentPage).toHaveBeenCalled()
-        expect(buttons.at(getters.curPage() - 1).classes()).toContain('active')
-        expect(buttons.at(getters.curPage() - 1).classes()).toContain('disabled')
-    })
-})
+  test("Should render amount of pages based on the pages number", () => {
+    const buttonLength = wrapper.findAll("button").length;
+    const pages = getters.pages();
+    expect(buttonLength).toBe(pages);
+  });
+  test("Page button should get the current page and set clicked button to active and disabled classes", () => {
+    const buttons = wrapper.findAll("button");
+    buttons.at(1).trigger("click");
+    expect(actions.getCurrentPage).toHaveBeenCalled();
+    expect(buttons.at(getters.curPage() - 1).classes()).toContain("active");
+    expect(buttons.at(getters.curPage() - 1).classes()).toContain("disabled");
+  });
+});

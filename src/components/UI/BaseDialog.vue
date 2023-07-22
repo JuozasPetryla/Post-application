@@ -29,7 +29,7 @@
             @focusout="validateAuthor"
           >
             <option
-            class="select-options"
+              class="select-options"
               v-for="author in authors"
               :key="author.id"
               :value="{ name: author.name, id: author.id }"
@@ -73,7 +73,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
-  name: 'BaseDialog',
+  name: "BaseDialog",
 
   data() {
     return {

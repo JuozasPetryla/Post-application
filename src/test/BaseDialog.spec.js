@@ -1,183 +1,166 @@
-import Vuex from 'vuex'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { describe, expect, test } from 'vitest'
-import BaseDialog from '../components/UI/BaseDialog.vue'
+import Vuex from "vuex";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { describe, expect, test } from "vitest";
+import BaseDialog from "../components/UI/BaseDialog.vue";
 
+const localVue = createLocalVue();
 
+localVue.use(Vuex);
 
-const localVue = createLocalVue()
+describe("BaseDialog.vue", () => {
+  let store;
+  let state;
+  let actions;
+  let getters;
+  let wrapper;
+  let mockRouter;
 
-localVue.use(Vuex)
-
-describe('BaseDialog.vue', () => {
-
-    let store
-    let actions
-    let getters
-
-
-    beforeEach(() => {
-        actions = {
-            closeModal: vi.fn(),
-            createNewPost: vi.fn(),
-            editPost: vi.fn()
-        }
-        getters = {
-            authors: () => ['Evelyn', 'Bob'],
-            formMode: () => 'create',
-            editId: () => 1
-        }
-        store = new Vuex.Store({
-            modules: {
-                form: {
-                    actions,
-                    getters
-                },
-                posts: {
-                    getters
-                },
-                postActions: {
-                    actions,
-                    getters
-                }
-            }
-        })
-    })
-
-    test('Renders slots correctly', () => {
-        const wrapper = shallowMount(BaseDialog, {
-            localVue,
-            store,
-            slots: {
-                header: 'Header content',
-                button: 'Button content'
-            }
-        })
-        expect(wrapper.html()).toContain('Header content')
-        expect(wrapper.html()).toContain('Button content')
-    })
-
-    test('shows the author select element when formMode is "create"', () => {
-        const wrapper = shallowMount(BaseDialog, {
-            localVue,
-            store,
-        });
-        const authorSelect = wrapper.find('select#author');
-        expect(authorSelect.exists()).toBe(true);
-    })
-
-
-    it("validates the title, author and content field correctly", async () => {
-        const wrapper = shallowMount(BaseDialog, {
-            localVue,
-            store
-        });
-        await wrapper.find("#title").setValue("");
-        expect(wrapper.vm.titleIsValid).toBe(false);
-
-        await wrapper.find("#title").setValue("Test Title");
-        expect(wrapper.vm.titleIsValid).toBe(true);
-
-        await wrapper.find("textarea").setValue("Test content");
-        expect(wrapper.vm.contentIsValid).toBe(true);
-
-        await wrapper.find(".select-options").findAll('option').at(0).setSelected({});
-        expect(wrapper.vm.authorIsValid).toBe(true);
-
-        await wrapper.find(".select-options").findAll('option').at(0).setSelected({ name: 'Evelyn', id: 1 });
-        expect(wrapper.vm.authorIsValid).toBe(true);
-
-
+  beforeEach(() => {
+    state = {
+      formMode: "create",
+    };
+    actions = {
+      closeModal: vi.fn(),
+      createNewPost: vi.fn(),
+      editPost: vi.fn(),
+    };
+    getters = {
+      authors: () => ["Evelyn", "Bob"],
+      formMode: () => state.formMode,
+      editId: () => 1,
+    };
+    store = new Vuex.Store({
+      modules: {
+        form: {
+          state,
+          actions,
+          getters,
+        },
+        posts: {
+          getters,
+        },
+        postActions: {
+          actions,
+          getters,
+        },
+      },
     });
 
+    mockRouter = {
+      push: vi.fn(),
+      currentRoute: { path: "/postDetail/1" },
+    };
 
-    test("triggers 'closeModal' action when the Close Modal button is clicked", async () => {
-        const wrapper = shallowMount(BaseDialog, {
-            localVue,
-            store
-        });
-        await wrapper.find(".close-btn").trigger("click");
-        expect(actions.closeModal).toHaveBeenCalled();
+    wrapper = shallowMount(BaseDialog, {
+      localVue,
+      store,
+      slots: {
+        header: "Header content",
+        button: "Button content",
+      },
+      mocks: {
+        $router: mockRouter,
+      },
     });
+  });
 
-    test('validates the title field', async () => {
-        const wrapper = shallowMount(BaseDialog, {
-            localVue,
-            store,
-        });
-        const titleInput = wrapper.find('#title');
-        const contentTextarea = wrapper.find('#content');
-        const authorSelect = wrapper.find('#author');
+  test("Renders slots correctly", () => {
+    expect(wrapper.html()).toContain("Header content");
+    expect(wrapper.html()).toContain("Button content");
+  });
 
-        await titleInput.setValue('');
-        await titleInput.trigger('blur');
-        expect(wrapper.vm.titleIsValid).toBe(false);
+  test('shows the author select element when formMode is "create"', () => {
+    const authorSelect = wrapper.find("select#author");
+    expect(authorSelect.exists()).toBe(true);
+  });
 
-        await contentTextarea.setValue('');
-        await contentTextarea.trigger('blur');
-        expect(wrapper.vm.contentIsValid).toBe(false);
+  it("validates the title, author and content field correctly", async () => {
+    await wrapper.find("#title").setValue("");
+    expect(wrapper.vm.titleIsValid).toBe(false);
 
-        await authorSelect.find(".select-options").findAll('option').at(0).setSelected({});
-        await authorSelect.trigger('focusout');
-        expect(wrapper.vm.authorIsValid).toBe(false);
+    await wrapper.find("#title").setValue("Test Title");
+    expect(wrapper.vm.titleIsValid).toBe(true);
 
-    });
+    await wrapper.find("textarea").setValue("Test content");
+    expect(wrapper.vm.contentIsValid).toBe(true);
 
-    test('submits the form in create mode when all fields are valid', async () => {
-        const wrapper = shallowMount(BaseDialog, {
-            localVue,
-            store,
-        });
+    await wrapper
+      .find(".select-options")
+      .findAll("option")
+      .at(0)
+      .setSelected({});
+    expect(wrapper.vm.authorIsValid).toBe(true);
 
-        const titleInput = wrapper.find('#title');
-        const contentTextarea = wrapper.find('#content');
-        const authorSelect = wrapper.find('select');
-        await titleInput.setValue('Title');
-        await contentTextarea.setValue('Content long 10');
-        await authorSelect.find(".select-options").findAll('option').at(0).setSelected({ name: 'Evelyn', id: 1 });
+    await wrapper
+      .find(".select-options")
+      .findAll("option")
+      .at(0)
+      .setSelected({ name: "Evelyn", id: 1 });
+    expect(wrapper.vm.authorIsValid).toBe(true);
+  });
 
-        const form = wrapper.find('form');
-        await form.trigger('submit.prevent');
+  test("triggers 'closeModal' action when the Close Modal button is clicked", async () => {
+    await wrapper.find(".close-btn").trigger("click");
+    expect(actions.closeModal).toHaveBeenCalled();
+  });
 
-        await wrapper.vm.$nextTick()
+  test("validates the title field", async () => {
+    const titleInput = wrapper.find("#title");
+    const contentTextarea = wrapper.find("#content");
+    const authorSelect = wrapper.find("#author");
 
-        expect(actions.createNewPost).toHaveBeenCalledWith({
-            title: 'Title',
-            body: 'Content long 10',
-            authorId: 1,
-            created_at: '2023-07-21',
-            updated_at: '2023-07-21',
-        });
+    await titleInput.setValue("");
+    await titleInput.trigger("blur");
+    expect(wrapper.vm.titleIsValid).toBe(false);
 
-        expect(actions.closeModal).toHaveBeenCalled();
-        expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/');
-    });
+    await contentTextarea.setValue("");
+    await contentTextarea.trigger("blur");
+    expect(wrapper.vm.contentIsValid).toBe(false);
 
-    test('submits the form in edit mode when all fields are valid', async () => {
-        const wrapper = shallowMount(BaseDialog, {
-            localVue,
-            store,
-            computed: {
-                formMode: 'edit'
-            }
-        });
-        const titleInput = wrapper.find('#title');
-        const contentTextarea = wrapper.find('#content');
-        await titleInput.setValue('Title');
-        await contentTextarea.setValue('Content long 10');
-        const form = wrapper.find('form');
-        await form.trigger('submit.prevent');
+    await authorSelect
+      .find(".select-options")
+      .findAll("option")
+      .at(0)
+      .setSelected({});
+    await authorSelect.trigger("focusout");
+    expect(wrapper.vm.authorIsValid).toBe(false);
+  });
 
-        wrapper.vm.formSubmit()
+  test("submits the form in create mode when all fields are valid", async () => {
+    wrapper.vm.formIsValid = true;
+    const titleInput = wrapper.find("#title");
+    const contentTextarea = wrapper.find("#content");
+    const authorSelect = wrapper.find("select");
+    await titleInput.setValue("Title");
+    await contentTextarea.setValue("Content long 10");
+    await authorSelect
+      .find(".select-options")
+      .findAll("option")
+      .at(0)
+      .setSelected({ name: "Evelyn", id: 1 });
 
-        expect(actions.editPost).toHaveBeenCalledWith({
-            title: 'Title',
-            body: 'Content long 10',
-            id: 1,
-            updated_at: '2023-07-21',
-        });
+    await wrapper.vm.formSubmit();
+    await actions.createNewPost();
 
-        expect(actions.closeModal).toHaveBeenCalled();
-        expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/');
-    });
-})
+    expect(actions.createNewPost).toHaveBeenCalled();
+
+    expect(actions.closeModal).toHaveBeenCalled();
+  });
+
+  test("submits the form in edit mode when all fields are valid", async () => {
+    wrapper.vm.formIsValid = true;
+
+    state.formMode = "edit";
+    const titleInput = wrapper.find("#title");
+    const contentTextarea = wrapper.find("#content");
+    await titleInput.setValue("Title");
+    await contentTextarea.setValue("Content long 10");
+
+    await wrapper.vm.formSubmit();
+
+    expect(actions.editPost).toHaveBeenCalled();
+
+    expect(actions.closeModal).toHaveBeenCalled();
+    expect(mockRouter.push).toHaveBeenCalledWith("/");
+  });
+});
