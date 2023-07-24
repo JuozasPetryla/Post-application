@@ -1,0 +1,100 @@
+{
+  "authors": [
+    {
+      "id": 1,
+      "name": "Oliver",
+      "created_at": "2023-05-31",
+      "updated_at": "2023-05-31"
+    },
+    {
+      "id": 2,
+      "name": "Evelyn",
+      "created_at": "2023-05-31",
+      "updated_at": "2023-05-31"
+    },
+    {
+      "id": 3,
+      "name": "Leo",
+      "created_at": "2023-05-31",
+      "updated_at": "2023-05-31"
+    },
+    {
+      "id": 4,
+      "name": "Luna",
+      "created_at": "2023-05-31",
+      "updated_at": "2023-05-31"
+    },
+    {
+      "id": 5,
+      "name": "Max",
+      "created_at": "2023-05-31",
+      "updated_at": "2023-05-31"
+    }
+  ],
+  "posts": [
+    {
+      "title": "NewArticleTest",
+      "body": "JuozasJuozasJuozas",
+      "authorId": 2,
+      "created_at": "2023-07-19",
+      "updated_at": "2023-07-19",
+      "id": 2
+    },
+    {
+      "title": "Hi hello",
+      "body": "Heloooooooooo",
+      "authorId": 3,
+      "created_at": "2023-07-19",
+      "updated_at": "2023-07-20",
+      "id": 3
+    },
+    {
+      "title": "HiHello",
+      "body": "NewPost!!!!!!!!!!!!!",
+      "authorId": 1,
+      "created_at": "2023-07-19",
+      "updated_at": "2023-07-19",
+      "id": 4
+    },
+    {
+      "title": "Hello hi",
+      "body": "Yo hello hi",
+      "authorId": 1,
+      "created_at": "2023-07-19",
+      "updated_at": "2023-07-21",
+      "id": 5
+    },
+    {
+      "title": "HEllooo",
+      "body": "aaaaaaaaaaaaaaaaaaa",
+      "authorId": 1,
+      "created_at": "2023-07-19",
+      "updated_at": "2023-07-21",
+      "id": 6
+    },
+    {
+      "title": "helloworld",
+      "body": "HelloEveryone",
+      "authorId": 2,
+      "created_at": "2023-07-19",
+      "updated_at": "2023-07-19",
+      "id": 7
+    },
+    {
+      "title": "HelloWorld",
+      "body": "HelloWorldHello",
+      "authorId": 2,
+      "created_at": "2023-07-19",
+      "updated_at": "2023-07-19",
+      "id": 8
+    },
+    {
+      "title": "Juozas",
+      "body": "aaaaaaaaaaaaa",
+      "authorId": 3,
+      "created_at": "2023-07-21",
+      "updated_at": "2023-07-21",
+      "id": 9
+    }
+  ]
+}
