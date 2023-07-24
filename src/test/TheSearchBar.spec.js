@@ -2,7 +2,7 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 import Vuex from "vuex";
 import { describe, test, expect, vi } from "vitest";
 import TheSearchBar from "../components/layout/TheSearchBar.vue";
-import { nextTick } from "process";
+
 
 const localVue = createLocalVue();
 
@@ -14,8 +14,7 @@ describe("TheSearchBar.vue", () => {
 
   beforeEach(() => {
     actions = {
-      getSearchTerm: vi.fn(),
-      getCurrentPage: vi.fn(),
+
     };
 
     store = new Vuex.Store({

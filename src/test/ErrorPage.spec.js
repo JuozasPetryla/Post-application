@@ -14,9 +14,7 @@ describe('ErrorPage.vue', () => {
 
     beforeEach(() => {
 
-        getters = {
-            errorMessage: () => 'Page not found'
-        }
+
 
         store = new Vuex.Store({
             getters

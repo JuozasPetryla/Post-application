@@ -1,5 +1,6 @@
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import Vuex from "vuex";
+import createWrapper from "./mockFactory";
 import { describe, test, expect, vi } from "vitest";
 import PostsPage from "../views/PostsPage.vue";
 const localVue = createLocalVue();
@@ -16,46 +17,11 @@ describe("PostsPage.vue", () => {
 
   beforeEach(() => {
     actions = {
-      getPosts: vi.fn(),
-      getAuthors: vi.fn(),
-      getPostDetailId: vi.fn(),
-      getCurrentPost: vi.fn(),
-      getAllPosts: vi.fn(),
+      
     };
 
     getters = {
-      posts: () => [
-        {
-          title: "Naujausias article",
-          body: "naujausias tikrai",
-          authorId: 2,
-          created_at: "2023-07-19",
-          updated_at: "2023-07-19",
-          id: 1,
-        },
-        {
-          title: "NewArticleTest",
-          body: "JuozasJuozasJuozas",
-          authorId: 2,
-          created_at: "2023-07-19",
-          updated_at: "2023-07-19",
-          id: 2,
-        },
-      ],
-      authors: () => [
-        {
-          id: 1,
-          name: "Oliver",
-          created_at: "2023-05-31",
-          updated_at: "2023-05-31",
-        },
-        {
-          id: 2,
-          name: "Evelyn",
-          created_at: "2023-05-31",
-          updated_at: "2023-05-31",
-        },
-      ],
+      
     };
 
     store = new Vuex.Store({
@@ -90,7 +56,7 @@ describe("PostsPage.vue", () => {
     mockRouter = {
       push: vi.fn(),
     };
-    wrapper = shallowMount(PostsPage, {
+    wrapper = createWrapper(PostsPage, {
       store,
       localVue,
       mocks: {

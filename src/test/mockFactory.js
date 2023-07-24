@@ -1,5 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 
+
 export function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item))
 }
@@ -33,7 +34,113 @@ function createWrapper(page, overrides) {
                 },
                 put: () => Promise.resolve({}),
                 post: () => Promise.resolve({}),
-            }
+            },
+            $store: {
+                getters: {
+                    errorMessage: () => 'Page not found'
+                },
+                modules: {
+                    posts: {
+                        actions: {
+                            getPosts: vi.fn(),
+                            getPostDetailId: vi.fn(),
+                            getCurrentPost: vi.fn(),
+                            getAuthors: vi.fn(),
+                        },
+                        getters: {
+                            posts: () => [
+                                {
+                                    title: "Naujausias article",
+                                    body: "naujausias tikrai",
+                                    authorId: 2,
+                                    created_at: "2023-07-19",
+                                    updated_at: "2023-07-19",
+                                    id: 1,
+                                },
+                                {
+                                    title: "NewArticleTest",
+                                    body: "JuozasJuozasJuozas",
+                                    authorId: 2,
+                                    created_at: "2023-07-19",
+                                    updated_at: "2023-07-19",
+                                    id: 2,
+                                },
+                            ],
+                            authors: () => ["Evelyn", "Bob"],
+                            currentPostDetail: () => {
+                                return {
+                                    title: "Naujausias article",
+                                    body: "naujausias tikrai",
+                                    authorId: 2,
+                                    created_at: "2023-07-19",
+                                    updated_at: "2023-07-19",
+                                    id: 1,
+                                };
+                            },
+                            postDetailId: () => 1,
+                            authors: () => [
+                                {
+                                    id: 1,
+                                    name: "Oliver",
+                                    created_at: "2023-05-31",
+                                    updated_at: "2023-05-31",
+                                },
+                                {
+                                    id: 2,
+                                    name: "Evelyn",
+                                    created_at: "2023-05-31",
+                                    updated_at: "2023-05-31",
+                                },
+                            ],
+                        }
+                    },
+                    postActions: {
+                        actions: {
+                            getEditId: vi.fn(),
+                            getDeleteId: vi.fn(),
+                            createNewPost: vi.fn(),
+                            editPost: vi.fn(),
+                        },
+                        getters: {
+                            deleteId: () => 1,
+                        }
+                    },
+                    search: {
+                        actions: {
+                            getSearchTerm: vi.fn(),
+                        }
+                    },
+                    pagination: {
+                        actions: {
+                            getAllPosts: vi.fn(),
+                            getCurrentPage: vi.fn(),
+                        },
+                        getters: {
+                            pages: () => 3,
+                            curPage: () => 2,
+                        }
+                    },
+                    infoModal: {
+                        actions: {
+                            openInfoModal: vi.fn(),
+                        }
+                    },
+                    form: {
+                        state: {
+                            formMode: "create",
+                        },
+                        getters: {
+                            formMode: () => state.formMode,
+                            createModalIsOpen: () => false,
+                        },
+                        actions: {
+                            openModal: vi.fn(),
+                            selectFormMode: vi.fn(),
+                            closeModal: vi.fn(),
+                        }
+                    }
+                }
+            },
         },
         stubs: {},
         propsData: {}

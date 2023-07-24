@@ -12,10 +12,6 @@ describe('TheHeader.vue', () => {
     let store
 
     beforeEach(() => {
-        actions = {
-            openModal: vi.fn(),
-            selectFormMode: vi.fn(),
-        }
 
         store = new Vuex.Store({
             modules: {

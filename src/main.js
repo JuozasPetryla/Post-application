@@ -4,6 +4,7 @@ import vueDebounce from 'vue-debounce'
 import router from './router/router';
 import store from './store/store';
 
+
 import './main.css'
 
 import BaseCard from './components/UI/BaseCard.vue'
@@ -17,6 +18,7 @@ Vue.component('BaseDialog', BaseDialog)
 Vue.component('BaseInfoDialog', BaseInfoDialog)
 
 Vue.use(vueDebounce)
+
 
 new Vue({
     store,

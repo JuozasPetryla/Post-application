@@ -16,18 +16,11 @@ describe("BaseDialog.vue", () => {
     let mockRouter;
 
     beforeEach(() => {
-        state = {
-            formMode: "create",
-        };
+
         actions = {
-            closeModal: vi.fn(),
-            createNewPost: vi.fn(),
-            editPost: vi.fn(),
+
         };
-        getters = {
-            authors: () => ["Evelyn", "Bob"],
-            formMode: () => state.formMode,
-        };
+
         store = new Vuex.Store({
             modules: {
                 form: {

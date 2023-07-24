@@ -15,13 +15,10 @@ describe("ThePagination.vue", () => {
 
   beforeEach(() => {
     actions = {
-      getCurrentPage: vi.fn(),
+
     };
 
-    getters = {
-      pages: () => 3,
-      curPage: () => 2,
-    };
+
 
     store = new Vuex.Store({
       modules: {
